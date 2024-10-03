@@ -10,7 +10,7 @@ export const useFichaStore = defineStore("ficha", () => {
 
   const listarFichas = async () => {
     try {
-      let r = await axios.get("https://asistenciasdeploy.onrender.com/api/Fichas/listar", {
+      let r = await axios.get("http://localhost:4500/api/Fichas/listar", {
         headers: {
           "x-token": useUsuarios.xtoken
         }
@@ -26,7 +26,7 @@ export const useFichaStore = defineStore("ficha", () => {
   const activarDesactivarFichas = async (id) => {
     try {
       let r = await axios.put(
-        `https://asistenciasdeploy.onrender.com/api/Fichas/activarDesactivar/${id}`,
+        `http://localhost:4500/api/Fichas/activarDesactivar/${id}`,
         {},
         {
           headers: {
@@ -47,7 +47,7 @@ export const useFichaStore = defineStore("ficha", () => {
 
   const guardarFicha = async (cod, nom) => {
     try {
-      let r = await axios.post("https://asistenciasdeploy.onrender.com/api/Fichas", {
+      let r = await axios.post("http://localhost:4500/api/Fichas", {
         codigo: cod,
         nombre: nom,
       }, {
@@ -79,7 +79,7 @@ export const useFichaStore = defineStore("ficha", () => {
     console.log(id);
     try {
       let r = await axios.put(
-        `https://asistenciasdeploy.onrender.com/api/Fichas/editar/${id}`,
+        `http://localhost:4500/api/Fichas/editar/${id}`,
         { codigo: cod, nombre: nom },
         {
           headers: {
@@ -109,7 +109,7 @@ export const useFichaStore = defineStore("ficha", () => {
 
   const eliminar = async (id) => {
     try {
-      let r = await axios.delete(`https://asistenciasdeploy.onrender.com/api/Fichas/eliminar/${id}`, {
+      let r = await axios.delete(`http://localhost:4500/api/Fichas/eliminar/${id}`, {
         headers: {
           "x-token": useUsuarios.xtoken
         }

@@ -8,7 +8,7 @@ export const useAprendizStore = defineStore("Aprendiz", () => {
 
     const listarAprendiz = async () => {
         try {
-            let res = await axios.get("https://asistenciasdeploy.onrender.com/api/Aprendices/Listar", {
+            let res = await axios.get("http://localhost:4500/api/Aprendices/Listar", {
                 headers: {
                     "x-token": useUsuarios.xtoken,
                 },
@@ -23,7 +23,7 @@ export const useAprendizStore = defineStore("Aprendiz", () => {
     const guardarAprediz = async (cc, nombre, email, telefono, IdFicha) => {
         try {
             let res = await axios.post(
-                "https://asistenciasdeploy.onrender.com/api/Aprendices",
+                "http://localhost:4500/api/Aprendices",
                 {
                     cc: cc,
                     nombre: nombre,
@@ -60,7 +60,7 @@ export const useAprendizStore = defineStore("Aprendiz", () => {
         console.log(id);
         try {
             let r = await axios.put(
-                `https://asistenciasdeploy.onrender.com/api/Aprendices/editar/${id}`,
+                `http://localhost:4500/api/Aprendices/editar/${id}`,
                 data, {
                 headers: {
                     "x-token": useUsuarios.xtoken,
@@ -90,7 +90,7 @@ export const useAprendizStore = defineStore("Aprendiz", () => {
     const activarDesactivarAprendiz = async (id) => {
         try {
             let res = await axios.put(
-                `https://asistenciasdeploy.onrender.com/api/Aprendices/activar/${id}`,
+                `http://localhost:4500/api/Aprendices/activar/${id}`,
                 {},
                 {
                     headers: {

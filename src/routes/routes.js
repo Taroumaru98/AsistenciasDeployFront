@@ -4,6 +4,7 @@ import fichas from '../components/fichas.vue';
 import aprendiz from '../components/aprendiz.vue';
 import usuario from '../components/usuario.vue';
 import bitacoras from '../components/bitacoras.vue';
+import informes from '../components/informe.vue';
 import login from '../components/login.vue';
 import archivo from '../components/archivo.vue';
 import registro from '../components/registro.vue';
@@ -16,6 +17,7 @@ const routes = [
     { path: '/aprendiz', component: aprendiz },
     { path: '/usuario', component: usuario },
     { path: '/bitacoras', component: bitacoras },
+    { path: '/informes', component: informes },
   ]},
   { path: '/archivo', component: archivo }, 
   { path: '/registro', component: registro },

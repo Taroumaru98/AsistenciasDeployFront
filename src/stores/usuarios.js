@@ -5,11 +5,16 @@ import { Notify } from "quasar";
 
 export const useUsuariosStore = defineStore("usuario", () => {
   let xtoken = ref("");
-  let usuario = ref("");
+  let usuario = ref({});
   let loading = ref(false);
+
   const listarUsuarios = async () => {
     try {
-      let r = await axios.get("https://asistenciasdeploy.onrender.com/api/Usuarios/listar");
+      let r = await axios.get("http://localhost:4500/api/Usuarios/listar", {
+        headers: {
+          "x-token": xtoken.value,
+        },
+      });
       console.log(r);
       return r;
     } catch (error) {
@@ -21,7 +26,7 @@ export const useUsuariosStore = defineStore("usuario", () => {
   const login = async (email, password) => {
     loading.value = true;
     try {
-      let r = await axios.post("https://asistenciasdeploy.onrender.com/api/Usuarios/login", {
+      let r = await axios.post("http://localhost:4500/api/Usuarios/login", {
         email: email,
         password: password,
       });
@@ -49,10 +54,56 @@ export const useUsuariosStore = defineStore("usuario", () => {
     xtoken.value = ""
   }
 
+  const activarDesactivarusuario = async (id) => {
+    try {
+      let res = await axios.put(
+        `http://localhost:4500/api/Usuarios/activarDesactivar/${id}`,
+        {},
+        {
+          headers: {
+            "x-token": xtoken.value,
+          },
+        }
+      );
+      console.log('Respuesta del servidor:', res.data);
+
+      const usuarioEstado = res.data.estado;
+  
+      if (usuarioEstado === 1) {
+        Notify.create({
+          color: "positive",
+          message: "Usuario Activado Correctamente",
+          icon:  "check",
+          timeout: 2500,
+        });
+      } else if (usuarioEstado === 0) {
+        Notify.create({
+          color: "positive",
+          message: "Usuario Desactivado Correctamente",
+          icon:  "check",
+          timeout: 2500,
+        });
+      }
+  
+      return res;
+
+    } catch (error) {
+      console.error(error);
+      Notify.create({
+        color: "negative",
+        message: error.response?.data?.error || "Error al cambiar estado del usuario",
+        icon: "error",
+        timeout: 2500,
+      });
+      return error;
+    }
+  };
+  
+
   const requestPasswordReset = async (email) => {
     loading.value = true;
     try {
-      let r = await axios.post("https://asistenciasdeploy.onrender.com/api/Usuarios/recuperar-contrasena", {
+      let r = await axios.post("http://localhost:4500/api/Usuarios/recuperar-contrasena", {
         email: email
       });
       Notify.create({
@@ -75,7 +126,7 @@ export const useUsuariosStore = defineStore("usuario", () => {
   const resetPassword = async (token, newPassword) => {
     loading.value = true;
     try {
-      const response = await axios.post(`https://asistenciasdeploy.onrender.com/api/Usuarios/restablecer-contrasena`, {
+      const response = await axios.post(`http://localhost:4500/api/Usuarios/restablecer-contrasena`, {
         token, 
         nuevaPassword: newPassword 
       });
@@ -96,6 +147,38 @@ export const useUsuariosStore = defineStore("usuario", () => {
     }
   };
 
+  const editarUsuario = async (id, emial, nom) => {
+    console.log(id);
+    try {
+      let r = await axios.put(
+        `http://localhost:4500/api/Usuarios/editar/${id}`,
+        { email: emial, nombre: nom },
+        {
+          headers: {
+            "x-token": xtoken.value,
+          },
+        }
+      );
+      console.log(r);
+      Notify.create({
+        color: "positive",
+        message: "Edición exitosa",
+        icon: "error",
+        timeout: 2500,
+      });
+      return r;
+    } catch (error) {
+      console.log(error);
+      Notify.create({
+        color: "negative",
+        message: error.response.data.errors[0].msg,
+        icon: "error",
+        timeout: 2500,
+      });
+      return error;
+    }
+  };
+
   return {
 
     listarUsuarios,
@@ -105,7 +188,9 @@ export const useUsuariosStore = defineStore("usuario", () => {
     usuario,
     requestPasswordReset,
     resetPassword,
-    loading
+    loading,
+    activarDesactivarusuario,
+    editarUsuario
   };
 
 }, { persist: true });

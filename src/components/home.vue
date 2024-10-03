@@ -10,46 +10,80 @@
         </q-toolbar>
       </q-header>
 
-      <!-- Drawer -->
-      <q-drawer v-model="drawer" :width="250" side="left" overlay :mini="miniState" @mouseover="miniState = false"
-      @mouseout="miniState = true" bordered :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-green-dark'" dark elevated>
-        <q-img class="absolute-top" src="" style="height: 150px; background-color: rgba(47, 125, 50, 0.9);"></q-img>
-        <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; background-color: rgba(47, 125, 50, 0.9);">
-          <q-list padding>
-            <!-- Home Button -->
-            <q-item clickable to="/home" v-ripple class="drawer-item">
-              <q-item-section avatar>
-                <q-icon name="home" class="drawer-icon" />
-              </q-item-section>
-              <q-item-section class="drawer-label">Home</q-item-section>
-            </q-item>
+      <q-drawer v-model="drawer" :width="250" side="left" overlay :mini="miniState" 
+  @mouseover="miniState = false" @mouseout="miniState = true" bordered 
+  :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-green-dark'" dark elevated>
 
-            <!-- Bitacoras Button -->
-            <q-item clickable to="/bitacoras" v-ripple class="drawer-item">
-              <q-item-section avatar>
-                <q-icon name="person" class="drawer-icon" />
-              </q-item-section>
-              <q-item-section class="drawer-label">Bitacoras</q-item-section>
-            </q-item>
+  <!-- Información del usuario autenticado -->
+  <div class="q-pa-md text-center text-white" style="background-color: rgba(47, 125, 50, 0.9);">
+    <q-avatar size="100px" class="q-mb-sm">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWoms2HEy0ELPrZGRr001PN2sh5sq9dU_BWQ&s" alt="Avatar">
+    </q-avatar>
+    <div v-if="usuariosStore.usuario">
+      <div class="q-font-bold">{{ usuariosStore.usuario.nombre || 'Usuario no identificado' }}</div>
+      <div class="q-opacity-70">{{ usuariosStore.usuario.email || 'No hay correo' }}</div>
+    </div>
+    <div v-else>
+      <div class="q-font-bold">Usuario no identificado</div>
+    </div>
+  </div>
 
-            <!-- Fichas Button -->
-            <q-item clickable to="/fichas" v-ripple class="drawer-item">
-              <q-item-section avatar>
-                <q-icon name="drafts" class="drawer-icon" />
-              </q-item-section>
-              <q-item-section class="drawer-label">Fichas</q-item-section>
-            </q-item>
+  <!-- Área de scroll con la lista de botones -->
+  <q-scroll-area style="height: calc(100% - 200px); background-color: rgba(47, 125, 50, 0.9);">
+    <q-list padding>
+      <!-- Botón Home -->
+      <q-item clickable to="/home" v-ripple class="drawer-item" style="padding: 10px;">
+        <q-item-section avatar>
+          <q-icon name="home" size="26px" class="drawer-icon" />
+        </q-item-section>
+        <q-item-section class="drawer-label">
+          <span class="q-mx-sm">Home</span>
+        </q-item-section>
+      </q-item>
 
-            <!-- Aprendices Button -->
-            <q-item clickable to="/aprendiz" v-ripple class="drawer-item">
-              <q-item-section avatar>
-                <q-icon name="star" class="drawer-icon" />
-              </q-item-section>
-              <q-item-section class="drawer-label">Aprendices</q-item-section>
-            </q-item>
-          </q-list>
-        </q-scroll-area>
-      </q-drawer>
+      <!-- Botón Bitacoras -->
+      <q-item clickable to="/bitacoras" v-ripple class="drawer-item" style="padding: 10px;">
+        <q-item-section avatar>
+          <q-icon name="person" size="26px" class="drawer-icon" />
+        </q-item-section>
+        <q-item-section class="drawer-label">
+          <span class="q-mx-sm">Bitacoras</span>
+        </q-item-section>
+      </q-item>
+
+            <!-- Botón informess -->
+            <q-item clickable to="/informes" v-ripple class="drawer-item" style="padding: 10px;">
+        <q-item-section avatar>
+          <q-icon name="person" size="26px" class="drawer-icon" />
+        </q-item-section>
+        <q-item-section class="drawer-label">
+          <span class="q-mx-sm">Informes</span>
+        </q-item-section>
+      </q-item>
+
+      <!-- Botón Fichas -->
+      <q-item clickable to="/fichas" v-ripple class="drawer-item" style="padding: 10px;">
+        <q-item-section avatar>
+          <q-icon name="drafts" size="26px" class="drawer-icon" />
+        </q-item-section>
+        <q-item-section class="drawer-label">
+          <span class="q-mx-sm">Fichas</span>
+        </q-item-section>
+      </q-item>
+
+      <!-- Botón Aprendices -->
+      <q-item clickable to="/aprendiz" v-ripple class="drawer-item" style="padding: 10px;">
+        <q-item-section avatar>
+          <q-icon name="star" size="26px" class="drawer-icon" />
+        </q-item-section>
+        <q-item-section class="drawer-label">
+          <span class="q-mx-sm">Aprendices</span>
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </q-scroll-area>
+</q-drawer>
+
 
       <q-page-container>
         <!-- Condicional para mostrar las tarjetas solo en la ruta /home -->
@@ -137,7 +171,7 @@ import { useUsuariosStore } from "../stores/usuarios.js";
 
 const router = useRouter();
 const route = useRoute(); 
-const useUsuarios = useUsuariosStore();
+const usuariosStore = useUsuariosStore()
 const drawer = ref(false);
 const miniState = ref(true);
 
@@ -146,7 +180,7 @@ const toggleDrawer = () => {
 };
 
 const Logout = async () => {
-  await useUsuarios.logout();
+  await usuariosStore.logout();
   router.replace("/");
 };
 
